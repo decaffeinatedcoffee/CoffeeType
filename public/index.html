@@ -177,6 +177,7 @@ var runningRound = 0;
 var runningword;
 var status;
 var messages = document.getElementById('messages');
+var roundEnd = 'ended';
 
 socket.on('newMessage', function(msg) {
     var item = document.createElement('p');
@@ -184,6 +185,9 @@ socket.on('newMessage', function(msg) {
     messages.appendChild(item);
     messages.scrollTop = messages.scrollHeight;
   });
+socket.on('roundEnd', function(valueEnd){
+roundEnd = valueEnd;
+});
 
 socket.on('players', function(players) {
     document.getElementById('players').innerText = players + " players online";
@@ -201,9 +205,10 @@ socket.on('players', function(players) {
   socket.on('status', function(status) {
     status = status;
      runningRound = 0; 
-    if(status == "start" && runningRound != currentRound){  
+    if(status == "start" && runningRound != currentRound && roundEnd == 'ended'){  
       document.getElementById('waiting_players').style.display = "none";
    runningRound = currentRound; 
+   roundEnd = "inProg";
    startRound();
   }else{
     document.getElementById('round').style.display = "none";
