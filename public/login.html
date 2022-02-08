@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,400&family=VT323&display=swap" rel="stylesheet">
+    <meta property="og:url"                content="https://coffeetype.herokuapp.com" />
+    <meta property="og:title"              content="CoffeeType" />
+    <meta property="og:description"        content="Multiplayer Typing speed minigame" />
+    <meta property="og:image"              content="https://avatars.githubusercontent.com/u/77131841?s=400&u=2679706fce330542437e9e196201e89be8c8ba07&v=4" />
+    <title>CoffeeType</title>
+</head>
+<style>
+  body{
+    background-color: rgb(153, 235, 255);
+  }
+    #nickname_input{
+display: block;
+margin: 0 auto;
+margin-top: 1em; 
+outline: none;
+}
+#login_text{
+  text-align: center;
+    margin-top: 5em;
+    font-family: 'VT323', monospace;
+    font-size: 30px;
+}
+#nickname_alert{
+  text-align: center;
+    margin-top: 1em;
+    font-family: 'VT323', monospace;
+    font-size: 20px;
+color: red;
+display: none;
+}
+#start_button{
+  display: block;
+margin: 0 auto;
+margin-top: 3em; 
+display: none;
+cursor: pointer;
+}
+</style>
+<body>
+    <div id="pre_login">
+        <p id="login_text">CoffeeType</p>
+        <p id="nickname_alert">The nickname can only have A-Z and 0-9 characters!</p>
+        <input type="text" placeholder="Nickname" id="nickname_input" oninput="checknick()">
+         <button id="start_button" onclick="go()">Start!</button>
+    
+       </div>
+</body>
+
+<script>
+
+    var nick = "IDK HOW";
+    function go(){
+   localStorage.setItem("coffeetype", nick);
+   location.replace('/');
+}
+function checknick(){
+  var nickname = document.getElementById('nickname_input').value;
+  let bannedchars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    if(bannedchars.test(nickname)){
+    document.getElementById('nickname_alert').style.display = "block";
+    document.getElementById('start_button').style.display = "none";
+    } else {
+      document.getElementById('nickname_alert').style.display = "none";
+      if(nickname != ""){
+   nick = nickname;
+   document.getElementById('start_button').style.display = "block";
+      }
+      else{
+        document.getElementById('start_button').style.display = "none";
+      }
+    }
+
+}
+
+</script>
+</html>
