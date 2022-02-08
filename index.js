@@ -30,8 +30,8 @@ io.on('connection', (socket) => {
         currentRound = 1;
     newword();
     }
-    socket.emit('newword', randomword);
-    socket.emit('round', currentRound);
+    io.sockets.emit('newword', randomword);
+    io.sockets.emit('round', currentRound);
     console.log(sessionusers);
     io.sockets.emit('players', sessionusers);
     if(sessionusers >= 5){
