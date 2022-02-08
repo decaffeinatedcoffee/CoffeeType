@@ -270,7 +270,7 @@ else{
 function sendmessage(){
       var message = document.getElementById("messagewaiting").value;
       if(message){
-      message = message.replace(/[&\/\\#,+(`)$~%.'":;*?<>{}]/g, '');
+      message = message.replace(/[&\/\\#,+(`)$~%.'":;*?<>{}]/g, '*');
       socket.emit('sendMessage', nick + ": " + message);
       document.getElementById("messagewaiting").value = '';
       }
