@@ -199,13 +199,13 @@ socket.on('players', function(players) {
   });
 
   socket.on('status', function(status) {
-    status = status
+    status = status;
+     runningRound = 0; 
     if(status == "start" && runningRound != currentRound){  
       document.getElementById('waiting_players').style.display = "none";
    runningRound = currentRound; 
    startRound();
   }else{
-    
     document.getElementById('round').style.display = "none";
     document.getElementById('waiting_players').style.display = "block";
 }
