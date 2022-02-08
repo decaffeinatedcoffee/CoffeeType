@@ -210,12 +210,11 @@ socket.on('players', function(players) {
    runningRound = currentRound; 
    roundEnd = "inProg";
    startRound();
-  }else{
-    document.getElementById('round').style.display = "none";
-    document.getElementById('waiting_players').style.display = "block";
-}
+  }
    if(status == "stop"){
     roundEnd = 'ended';
+    document.getElementById('round').style.display = "none";
+    document.getElementById('waiting_players').style.display = "block";
   }
   });
 
