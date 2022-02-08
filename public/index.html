@@ -242,6 +242,7 @@ document.getElementById('input_answer').value = "";
 function check(){
 var typedvalue = document.getElementById('input_answer').value;
 if(typedvalue.toLowerCase() === backendword.toLowerCase()){
+  navigator.vibrate(180);
   document.getElementById('input_answer').value = "Right!";
   document.getElementById('input_answer').disabled = true;
     var winnerinfo = {nick: nick, word: typedvalue}; 
