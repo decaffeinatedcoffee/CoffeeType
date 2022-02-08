@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;1,400&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
+  <meta property="og:url"                content="https://coffeetype.herokuapp.com" />
+    <meta property="og:title"              content="CoffeeType" />
+    <meta property="og:description"        content="Multiplayer Typing speed minigame" />
+    <meta property="og:image"              content="https://avatars.githubusercontent.com/u/77131841?s=400&u=2679706fce330542437e9e196201e89be8c8ba07&v=4" />
+    <title>CoffeeType</title>
+</head>
+
+<style>
+body{
+    background-color: rgb(153, 235, 255);
+  }
+ 
+#input_answer{
+display: block;
+margin: 0 auto;
+margin-top: 3em;
+outline: none;
+}
+#random_word{
+    text-align: center;
+    margin-top: 1em;
+    font-family: 'VT323', monospace;
+    font-size: 30px;
+}
+#label{
+    text-align: center;
+    margin-top: 2em;
+    font-family: 'VT323', monospace;
+    font-size: 30px;
+}
+#current_round{
+    text-align: center;
+    margin-top: 2em;
+    font-family: 'Cutive Mono', monospace;
+    font-size: 30px;   
+}
+#round{
+    display: none;
+}
+#ranking{
+    font-family: 'Cutive Mono', monospace;
+    margin-left: 10px;
+}
+#wait_text{
+  text-align: center;
+    margin-top: 1em;
+    font-family: 'VT323', monospace;
+    font-size: 30px;
+}
+#current_players{
+  text-align: center;
+    margin-top: 1em;
+    font-family: 'VT323', monospace;
+    font-size: 30px;
+}
+#waiting_players{
+  display: none;
+}
+#chat_alert{
+  text-align: center;
+    margin-top: 1em;
+    font-family: 'VT323', monospace;
+    font-size: 20px;
+}
+#messagewaiting{
+  display: block;
+margin: 0 auto;
+margin-top: 3em;
+outline: none;
+}
+#sendmessagewaiting{
+  display: block;
+margin: 0 auto;
+margin-top: 1em;
+cursor: pointer;
+}
+#messages_waiting{
+  text-align: center;
+  font-family: 'VT323', monospace;
+}
+#messages{
+  display: block;
+  overflow-y: scroll;
+  height: 150px;
+  width: 300px;
+  font-size: 18px;
+  margin: 0 auto;
+}
+</style>
+<body>
+
+
+    <div id="round">
+    <p id="current_round"></p>    
+    <p id="label">The word is:</p>
+    <p id="random_word" oncopy="return false" oncopy="return false"></p>
+    <input type="text" placeholder="Type the word here" id="input_answer" oninput="check()" oncopy="return false" onpaste="return false">
+    <div id="ranking"> 
+    <p id="players"></p>
+      <p>Round ranking</p>
+      <p id="first">1st - </p>
+      <p id="second">2nd - </p>
+      <p id="third">3rd - </p>
+      <p id="fourth">4th - </p>
+   </div>
+ </div>
+
+   <div id="waiting_players">
+   <p id="wait_text">Waiting for more players to start the game</p>
+   <p id="current_players"></p>
+   <p id="chat_alert">You can use the chat while waiting</p>
+   <div id="messages_waiting">
+    <div id="messages"></div>
+    <input type="text" id="messagewaiting" placeholder="Type the message">
+    <button id="sendmessagewaiting" onclick='sendmessage()'>Send</button>
+   </div>
+  </div>
+</body>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+var socket = io();
+var nick = localStorage.getItem('coffeetype');
+if(nick){
+  nick = nick.replace(/[&\/\\#,+(`)$~%.'":;*?<>{}]/g, '');
+}
+
+let round = [
+"round 0 its probably a bug '0'",
+'1st',
+'2nd',
+'3rd',
+'4th',
+'5th',
+'6th',
+'7th',
+'8th',
+'9th',
+'10th',
+'11th',
+'12th',
+'13th',
+'14th',
+'15th',
+'16th',
+'17th',
+'18th',
+'19th',
+'20th',
+'21st',
+'22nd',
+'23rd',
+'24th',
+'25th',
+'26th',
+'27th',
+'28th',
+'29th',
+'30th',
+]
+
+if(nick){
+  localStorage.removeItem('coffeetype');
+var backendword;
+var countershuffle = 0;
+var currentRound;
+var runningRound = 0;
+var runningword;
+var status;
+var messages = document.getElementById('messages');
+
+socket.on('newMessage', function(msg) {
+    var item = document.createElement('p');
+    item.textContent = msg;
+    messages.appendChild(item);
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+
+socket.on('players', function(players) {
+    document.getElementById('players').innerText = players + " players online";
+    document.getElementById('current_players').innerText = players + "/5 players online";
+  });
+
+  socket.on('newword', function(word) {
+    backendword = word;
+  });
+
+  socket.on('round', function(round) {
+    currentRound = round
+  });
+
+  socket.on('status', function(status) {
+    status = status
+    if(status == "start" && runningRound != currentRound){  
+      document.getElementById('waiting_players').style.display = "none";
+   runningRound = currentRound; 
+   startRound();
+  }else{
+    
+    document.getElementById('round').style.display = "none";
+    document.getElementById('waiting_players').style.display = "block";
+}
+  });
+
+function startRound(){
+    document.getElementById('current_round').innerText = round[currentRound] + " round";   
+    document.getElementById('round').style.display = "block";
+
+if(backendword != runningword){
+    countershuffle = 0;
+    shuffle();
+    runningword = backendword;
+}
+
+function shuffle(){
+  if(countershuffle < 30){  
+  countershuffle ++;    
+ var shuffleeffect = Math.random().toString(36).substr(2, 20);
+ document.getElementById('random_word').innerText = shuffleeffect;
+ setTimeout(shuffle, 50);
+  }
+  else{
+ document.getElementById('random_word').innerText = backendword;
+  }
+}
+document.getElementById('input_answer').value = "";
+  document.getElementById('input_answer').disabled = false;
+}
+
+
+
+
+function check(){
+var typedvalue = document.getElementById('input_answer').value;
+if(typedvalue.toLowerCase() === backendword.toLowerCase()){
+  document.getElementById('input_answer').value = "Right!";
+  document.getElementById('input_answer').disabled = true;
+    var winnerinfo = {nick: nick, word: typedvalue}; 
+    socket.emit('winner', winnerinfo);
+}
+}
+
+socket.on('first', function(first) {
+    document.getElementById('first').innerText = "1st - " + first;
+  });
+  socket.on('second', function(second) {
+    document.getElementById('second').innerText = "2nd - " + second;
+  });
+  socket.on('third', function(third) {
+    document.getElementById('third').innerText = "3rd - " + third;
+  });
+  socket.on('fourth', function(fourth) {
+    document.getElementById('fourth').innerText = "4th - " + fourth;
+  });
+}
+else{
+  localStorage.removeItem('coffeetype');
+  location.replace('/login');
+}
+
+function sendmessage(){
+      var message = document.getElementById("messagewaiting").value;
+      if(message){
+      message = message.replace(/[&\/\\#,+(`)$~%.'":;*?<>{}]/g, '');
+      socket.emit('sendMessage', nick + ": " + message);
+      document.getElementById("messagewaiting").value = '';
+      }
+    }
+</script>
+</html>
