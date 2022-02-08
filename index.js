@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
       });
        socket.on('newJoin', (user) => {
         var joinfilter = user.replace(/[&\/\\#,+(`)$~%.'":;*?<>{}]/g, '');
-        io.sockets.emit('newMessage', joinfilter + " joined the game); 
+        io.sockets.emit('newMessage', joinfilter + " joined the game"); 
       });
       socket.on('winner', (about) => {
           var winnernick = about.nick.replace(/[&\/\\#,+(`)$~%.'":;*?<>{}]/g, '');
