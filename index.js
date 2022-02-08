@@ -72,6 +72,9 @@ io.on('connection', (socket) => {
         if(currentRound < 30){
         currentRound ++;
         newword();
+        }else{
+         currentRound = 1;
+         newword();
         }
     }
        }
