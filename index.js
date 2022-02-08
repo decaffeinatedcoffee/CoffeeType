@@ -51,7 +51,10 @@ io.on('connection', (socket) => {
         io.sockets.emit('players', sessionusers);
         console.log(sessionusers)
       });
-
+       socket.on('newJoin', (user) => {
+        var joinfilter = user.replace(/[&\/\\#,+(`)$~%.'":;*?<>{}]/g, '');
+        io.sockets.emit('newMessage', joinfilter + " joined the game); 
+      });
       socket.on('winner', (about) => {
           var winnernick = about.nick.replace(/[&\/\\#,+(`)$~%.'":;*?<>{}]/g, '');
        if(rightanswers < 4){   
