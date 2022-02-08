@@ -178,7 +178,8 @@ var runningword;
 var status;
 var messages = document.getElementById('messages');
 var roundEnd = 'ended';
-
+socket.emit('newJoin', nick);
+    
 socket.on('newMessage', function(msg) {
     var item = document.createElement('p');
     item.textContent = msg;
