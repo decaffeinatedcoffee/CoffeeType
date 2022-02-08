@@ -71,6 +71,7 @@ io.on('connection', (socket) => {
         io.sockets.emit('fourth', winnernick); 
         if(currentRound < 30){
         currentRound ++;
+        io.sockets.emit('roundEnd', 'ended');
         newword();
         }else{
          currentRound = 1;
