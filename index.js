@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         sessionusers = sessionusers - 1;
-        if(sessionusers >== 5){
+        if(sessionusers >= 5){
             io.sockets.emit('status', 'start');
         }else{
             io.sockets.emit('status', 'stop');
