@@ -13,6 +13,11 @@ var sessionusers = 0;
 var randomword = "pizza oven";
 var currentRound = 0;
 var rightanswers = 0;
+var fisrtLog = '';
+var secondLog = '';
+var thirdLog = '' ;
+var fourthLog = '' ;
+
 
 app.get('/', function(req, res){   
     res.sendFile(__dirname + '/public/index.html');     
@@ -32,6 +37,10 @@ io.on('connection', (socket) => {
     }
     io.sockets.emit('newword', randomword);
     io.sockets.emit('round', currentRound);
+    io.sockets.emit('first', fisrtLog);
+    io.sockets.emit('second', secondLog);
+    io.sockets.emit('third', thirdLog);
+    io.sockets.emit('fourth', fourthLog);
     console.log(sessionusers);
     io.sockets.emit('players', sessionusers);
     if(sessionusers >= 5){
@@ -47,6 +56,11 @@ io.on('connection', (socket) => {
             io.sockets.emit('status', 'start');
         }else{
             io.sockets.emit('status', 'stop');
+            rightanswers = 0;
+            fisrtLog = '';
+            secondLog = '';
+            thirdLog = '' ;
+            fourthLog = '' ;
         }
         io.sockets.emit('players', sessionusers);
         console.log(sessionusers)
@@ -63,16 +77,29 @@ io.on('connection', (socket) => {
        if(about.word.toLowerCase() == randomword){
         if(rightanswers == 1){   
             io.sockets.emit('first', winnernick);
+            fisrtLog = winnernick
        }
        if(rightanswers == 2){   
         io.sockets.emit('second', winnernick);
+        secondLog = winnernick
     }
     if(rightanswers == 3){   
         io.sockets.emit('third', winnernick);
+        thirdLog = winnernick;
     }
     if(rightanswers == 4){  
         io.sockets.emit('fourth', winnernick); 
-        if(currentRound < 30){
+        fourthLog = winnernick;
+        setTimeout(setnext, 1500);
+    }
+       }
+    }
+      });
+      
+ 
+  
+  function setnext() {
+    if(currentRound < 30){
         currentRound ++;
         io.sockets.emit('roundEnd', 'ended');
         newword();
@@ -80,14 +107,9 @@ io.on('connection', (socket) => {
          currentRound = 1;
          newword();
         }
-    }
-       }
-    }
-      });
-      
-  });
-  
-  
+  }
+
+   });
   function newword(){
     io.sockets.emit('first', '');
     io.sockets.emit('second', '');
@@ -108,6 +130,3 @@ if(sessionusers >= 5){
 server.listen(process.env.PORT || 5000, () => {
     console.log("Listening Ports")
 })
-
-
-
