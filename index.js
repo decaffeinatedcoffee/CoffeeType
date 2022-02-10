@@ -105,6 +105,7 @@ io.on('connection', (socket) => {
         newword();
         }else{
          currentRound = 1;
+        io.sockets.emit('roundEnd', 'ended');
          newword();
         }
   }
