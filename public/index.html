@@ -76,7 +76,19 @@ margin: 0 auto;
 margin-top: 3em;
 outline: none;
 }
+#messagegame{
+  display: block;
+margin: 0 auto;
+margin-top: 3em;
+outline: none;
+}
 #sendmessagewaiting{
+  display: block;
+margin: 0 auto;
+margin-top: 1em;
+cursor: pointer;
+}
+#sendmessagegame{
   display: block;
 margin: 0 auto;
 margin-top: 1em;
@@ -86,6 +98,11 @@ cursor: pointer;
   text-align: center;
   font-family: 'VT323', monospace;
 }
+#messages_game{
+  text-align: center;
+  font-family: 'VT323', monospace;
+  float: right;
+}
 #messages{
   display: block;
   overflow-y: scroll;
@@ -94,12 +111,28 @@ cursor: pointer;
   font-size: 18px;
   margin: 0 auto;
 }
+#gamemessages{
+  display: block;
+  overflow-y: scroll;
+  height: 150px;
+  width: 300px;
+  font-size: 18px;
+  margin: 0 auto;
+}
+#winner{
+  text-align: center;
+    margin-top: 1em;
+    font-family: 'VT323', monospace;
+    font-size: 30px;
+    height: 0px;
+}
 </style>
 <body>
-
-
+   
+  <iframe name="submitframe" style="display:none;" id="submitframe"></iframe>
     <div id="round">
     <p id="current_round"></p>    
+    <p id="winner"></p>
     <p id="label">The word is:</p>
     <p id="random_word" oncopy="return false" oncopy="return false"></p>
     <input type="text" placeholder="Type the word here" id="input_answer" oninput="check()" oncopy="return false" onpaste="return false">
@@ -111,6 +144,13 @@ cursor: pointer;
       <p id="third">3rd - </p>
       <p id="fourth">4th - </p>
    </div>
+   <div id="messages_game">
+    <div id="gamemessages"></div>
+    <form target="submitframe">
+    <input type="text" id="messagegame" placeholder="Type the message">
+    <button type="submit" id="sendmessagegame" onclick='sendmessageongame()'>Send</button>
+  </form>
+   </div>
  </div>
 
    <div id="waiting_players">
@@ -119,8 +159,10 @@ cursor: pointer;
    <p id="chat_alert">You can use the chat while waiting</p>
    <div id="messages_waiting">
     <div id="messages"></div>
+    <form target="submitframe">
     <input type="text" id="messagewaiting" placeholder="Type the message">
-    <button id="sendmessagewaiting" onclick='sendmessage()'>Send</button>
+    <button type="submit" id="sendmessagewaiting" onclick='sendmessage()'>Send</button>
+    </form>
    </div>
   </div>
 </body>
@@ -176,15 +218,23 @@ var currentRound;
 var runningRound = 0;
 var runningword;
 var status;
+var firstPlace;
 var messages = document.getElementById('messages');
+var gamemessages = document.getElementById('gamemessages');
 var roundEnd = 'ended';
 socket.emit('newJoin', nick);
     
 socket.on('newMessage', function(msg) {
     var item = document.createElement('p');
     item.textContent = msg;
-    messages.appendChild(item);
+    messages.appendChild(item);  
     messages.scrollTop = messages.scrollHeight;
+  });
+  socket.on('newMessage', function(msg) {
+    var item = document.createElement('p');
+    item.textContent = msg;
+     gamemessages.appendChild(item);
+   gamemessages.scrollTop = gamemessages.scrollHeight;
   });
 socket.on('roundEnd', function(valueEnd){
 roundEnd = valueEnd;
@@ -230,6 +280,8 @@ if(backendword != runningword){
 }
 
 function shuffle(){
+  document.getElementById('winner').style.color = "none";
+ document.getElementById('winner').innerText = "";
   if(countershuffle < 30){  
   countershuffle ++;    
  var shuffleeffect = Math.random().toString(36).substr(2, 20);
@@ -260,6 +312,7 @@ if(typedvalue.toLowerCase() === backendword.toLowerCase()){
 
 socket.on('first', function(first) {
     document.getElementById('first').innerText = "1st - " + first;
+    firstPlace = first;
   });
   socket.on('second', function(second) {
     document.getElementById('second').innerText = "2nd - " + second;
@@ -269,6 +322,16 @@ socket.on('first', function(first) {
   });
   socket.on('fourth', function(fourth) {
     document.getElementById('fourth').innerText = "4th - " + fourth;
+    if(firstPlace && fourth != ''){
+    if(firstPlace == nick){
+      document.getElementById('winner').style.color = "#007e34";
+      document.getElementById('winner').innerText = "You won this round!";
+    }
+    else{
+      document.getElementById('winner').style.color = "brown";
+      document.getElementById('winner').innerText = firstPlace + " won this round!";
+    }
+  }
   });
 }
 else{
@@ -282,6 +345,15 @@ function sendmessage(){
       message = message.replace(/[&\/\\#,+(`)$~%.'":;*<>{}]/g, '*');
       socket.emit('sendMessage', nick + ": " + message);
       document.getElementById("messagewaiting").value = '';
+      }
+    }
+
+    function sendmessageongame(){
+      var message = document.getElementById("messagegame").value;
+      if(message){
+      message = message.replace(/[&\/\\#,+(`)$~%.'":;*<>{}]/g, '*');
+      socket.emit('sendMessage', nick + ": " + message);
+      document.getElementById("messagegame").value = '';
       }
     }
 </script>
