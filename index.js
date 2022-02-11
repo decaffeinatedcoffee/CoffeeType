@@ -26,6 +26,16 @@ app.get('/login', function(req, res){
     res.sendFile(__dirname + '/public/login.html');     
 });
 
+app.get('/audios/right', function(req, res){   
+    res.sendFile(__dirname + '/public/right.mp3');     
+});
+app.get('/audios/rightothers', function(req, res){   
+    res.sendFile(__dirname + '/public/rightothers.mp3');     
+});
+app.get('/audios/shuffle', function(req, res){   
+    res.sendFile(__dirname + '/public/shuffle.mp3');     
+});
+
 io.on('connection', (socket) => {
     socket.on('sendMessage', (msg) => {
         io.sockets.emit('newMessage', msg);  
@@ -99,13 +109,13 @@ io.on('connection', (socket) => {
  
   
   function setnext() {
-    if(currentRound < 30){
+    if(currentRound < 3){
         currentRound ++;
         io.sockets.emit('roundEnd', 'ended');
         newword();
         }else{
          currentRound = 1;
-        io.sockets.emit('roundEnd', 'ended');
+         io.sockets.emit('roundEnd', 'ended');
          newword();
         }
   }
