@@ -109,7 +109,7 @@ io.on('connection', (socket) => {
  
   
   function setnext() {
-    if(currentRound < 3){
+    if(currentRound < 30){
         currentRound ++;
         io.sockets.emit('roundEnd', 'ended');
         newword();
