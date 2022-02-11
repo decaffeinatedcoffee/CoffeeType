@@ -211,7 +211,11 @@ let round = [
 ]
 
 if(nick){
-  localStorage.removeItem('coffeetype');
+let rightAudio = new Audio("/audios/right");  
+let rightotherAudio = new Audio("/audios/rightothers"); 
+let shuffleAudio = new Audio("/audios/shuffle");
+shuffleAudio.load();
+localStorage.removeItem('coffeetype');
 var backendword;
 var countershuffle = 0;
 var currentRound;
@@ -282,6 +286,7 @@ if(backendword != runningword){
 function shuffle(){
   document.getElementById('winner').style.color = "none";
  document.getElementById('winner').innerText = "";
+ shuffleAudio.play();
   if(countershuffle < 30){  
   countershuffle ++;    
  var shuffleeffect = Math.random().toString(36).substr(2, 20);
@@ -303,6 +308,7 @@ document.getElementById('input_answer').value = "";
 function check(){
 var typedvalue = document.getElementById('input_answer').value;
 if(typedvalue.toLowerCase() === backendword.toLowerCase()){
+  rightAudio.play();
   navigator.vibrate(180);
   document.getElementById('input_answer').value = "Right!";
   document.getElementById('input_answer').disabled = true;
@@ -313,16 +319,28 @@ if(typedvalue.toLowerCase() === backendword.toLowerCase()){
 
 socket.on('first', function(first) {
     document.getElementById('first').innerText = "1st - " + first;
+    if(first != "" && first != nick){
+    rightotherAudio.play();
+    }
     firstPlace = first;
   });
   socket.on('second', function(second) {
     document.getElementById('second').innerText = "2nd - " + second;
+    if(second != "" && second != nick){
+    rightotherAudio.play();
+    }
   });
   socket.on('third', function(third) {
     document.getElementById('third').innerText = "3rd - " + third;
+    if(third != "" && third != nick){
+    rightotherAudio.play();
+    }
   });
   socket.on('fourth', function(fourth) {
     document.getElementById('fourth').innerText = "4th - " + fourth;
+    if(fourth != "" && fourth != nick){
+    rightotherAudio.play();
+    }
     if(firstPlace && fourth != ''){
     if(firstPlace == nick){
       document.getElementById('winner').style.color = "#007e34";
