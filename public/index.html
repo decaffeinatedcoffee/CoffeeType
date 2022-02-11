@@ -135,7 +135,7 @@ cursor: pointer;
     <p id="winner"></p>
     <p id="label">The word is:</p>
     <p id="random_word" oncopy="return false" oncopy="return false"></p>
-    <input type="text" placeholder="Type the word here" id="input_answer" oninput="check()" oncopy="return false" onpaste="return false">
+    <input type="text" placeholder="Type the word here" id="input_answer" oninput="check()" oncopy="return false" onpaste="return false" autocomplete="off" >
     <div id="ranking"> 
     <p id="players"></p>
       <p>Round ranking</p>
@@ -147,7 +147,7 @@ cursor: pointer;
    <div id="messages_game">
     <div id="gamemessages"></div>
     <form target="submitframe">
-    <input type="text" id="messagegame" placeholder="Type the message">
+    <input type="text" id="messagegame" placeholder="Type the message" autocomplete="off" >
     <button type="submit" id="sendmessagegame" onclick='sendmessageongame()'>Send</button>
   </form>
    </div>
@@ -160,7 +160,7 @@ cursor: pointer;
    <div id="messages_waiting">
     <div id="messages"></div>
     <form target="submitframe">
-    <input type="text" id="messagewaiting" placeholder="Type the message">
+    <input type="text" id="messagewaiting" placeholder="Type the message" autocomplete="off" >
     <button type="submit" id="sendmessagewaiting" onclick='sendmessage()'>Send</button>
     </form>
    </div>
