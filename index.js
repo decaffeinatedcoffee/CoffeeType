@@ -43,7 +43,7 @@ app.get('/audios/shuffle', function(req, res){
 app.get('/audios/appstart', function(req, res){   
     res.sendFile(__dirname + '/public/start.mp3');     
 });
-app.get('/audios/logo', function(req, res){   
+app.get('/images/logo', function(req, res){   
     res.sendFile(__dirname + '/public/applogo.png');     
 });
 io.on('connection', (socket) => {
