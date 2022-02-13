@@ -40,6 +40,10 @@ app.get('/audios/shuffle', function(req, res){
     res.sendFile(__dirname + '/public/shuffle.mp3');     
 });
 
+app.get('/audios/appstart', function(req, res){   
+    res.sendFile(__dirname + '/public/start.mp3');     
+});
+
 io.on('connection', (socket) => {
     socket.on('sendMessage', (msg) => {
         io.sockets.emit('newMessage', msg);  
