@@ -7,7 +7,11 @@ var randomWords = require('random-words');
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const io = require('socket.io')(server, {
+    cors: {
+      origin: '*',
+    }
+  });
 
 var sessionusers = 0;
 var randomword = "pizza oven";
