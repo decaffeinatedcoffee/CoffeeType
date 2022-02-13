@@ -44,7 +44,7 @@ app.get('/audios/appstart', function(req, res){
     res.sendFile(__dirname + '/public/start.mp3');     
 });
 app.get('/images/logo', function(req, res){   
-    res.sendFile(__dirname + '/public/applogo.png');     
+    res.sendFile(__dirname + '/public/logo.png');     
 });
 io.on('connection', (socket) => {
     socket.on('sendMessage', (msg) => {
