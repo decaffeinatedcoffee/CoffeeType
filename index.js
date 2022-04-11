@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
     io.sockets.emit('fourth', fourthLog);
     console.log(sessionusers);
     io.sockets.emit('players', sessionusers);
-    if(sessionusers >= 5){
+    if(sessionusers >= 2){
         io.sockets.emit('status', 'start')
     }else{
         io.sockets.emit('status', 'stop');
@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         sessionusers = sessionusers - 1;
-        if(sessionusers >= 5){
+        if(sessionusers >= 2){
             io.sockets.emit('status', 'start');
         }else{
             io.sockets.emit('status', 'stop');
@@ -110,6 +110,8 @@ io.on('connection', (socket) => {
     if(rightanswers == 4){  
         io.sockets.emit('fourth', winnernick); 
         fourthLog = winnernick;
+    }
+    if(rightanswers == sessionusers - 1 || rightanswers == 4){
         setTimeout(setnext, 1500);
     }
        }
@@ -140,7 +142,7 @@ io.on('connection', (socket) => {
 randomword = randomWords();
 io.sockets.emit('newword', randomword);
 io.sockets.emit('round', currentRound);
-if(sessionusers >= 5){
+if(sessionusers >= 2){
     io.sockets.emit('status', 'start');
 }else{
     io.sockets.emit('status', 'stop');
