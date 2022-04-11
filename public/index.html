@@ -16,7 +16,8 @@
 
 <style>
 body{
-    background-color: rgb(153, 235, 255);
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
   }
  
 #input_answer{
@@ -223,6 +224,7 @@ var currentRound;
 var runningRound = 0;
 var runningword;
 var status;
+var playersnumber;
 var firstPlace;
 var messages = document.getElementById('messages');
 var gamemessages = document.getElementById('gamemessages');
@@ -247,7 +249,29 @@ roundEnd = valueEnd;
 
 socket.on('players', function(players) {
     document.getElementById('players').innerText = players + " players online";
-    document.getElementById('current_players').innerText = players + "/5 players online";
+    document.getElementById('current_players').innerText = players + "/2 players online";
+    playersnumber = players;
+    if(players == 2){
+      document.getElementById("first").style.display = "block"
+      document.getElementById("second").style.display = "none"
+      document.getElementById("third").style.display = "none"
+      document.getElementById("fourth").style.display = "none"
+    }else if(players == 3){
+      document.getElementById("first").style.display = "block"
+      document.getElementById("second").style.display = "block"
+      document.getElementById("third").style.display = "none"
+      document.getElementById("fourth").style.display = "none"
+    }else if(players == 4){
+      document.getElementById("first").style.display = "block"
+      document.getElementById("second").style.display = "block"
+      document.getElementById("third").style.display = "block"
+      document.getElementById("fourth").style.display = "none"
+    }else if(players > 4){
+      document.getElementById("first").style.display = "block"
+      document.getElementById("second").style.display = "block"
+      document.getElementById("third").style.display = "block"
+      document.getElementById("fourth").style.display = "block"
+    }
   });
 
   socket.on('newword', function(word) {
@@ -324,25 +348,55 @@ socket.on('first', function(first) {
     rightotherAudio.play();
     }
     firstPlace = first;
+    if(firstPlace && playersnumber == 2){
+    if(firstPlace == nick){
+      document.getElementById('winner').style.color = "#007e34";
+      document.getElementById('winner').innerText = "You won this round!";
+    }
+    else{
+      document.getElementById('winner').style.color = "brown";
+      document.getElementById('winner').innerText = firstPlace + " won this round!";
+    }
+  }
   });
   socket.on('second', function(second) {
     document.getElementById('second').innerText = "2nd - " + second;
     if(second != "" && second != nick){
     rightotherAudio.play();
     }
+    if(firstPlace && playersnumber == 3){
+    if(firstPlace == nick){
+      document.getElementById('winner').style.color = "#007e34";
+      document.getElementById('winner').innerText = "You won this round!";
+    }
+    else{
+      document.getElementById('winner').style.color = "brown";
+      document.getElementById('winner').innerText = firstPlace + " won this round!";
+    }
+  }
   });
   socket.on('third', function(third) {
     document.getElementById('third').innerText = "3rd - " + third;
     if(third != "" && third != nick){
     rightotherAudio.play();
     }
+    if(firstPlace && playersnumber == 4){
+    if(firstPlace == nick){
+      document.getElementById('winner').style.color = "#007e34";
+      document.getElementById('winner').innerText = "You won this round!";
+    }
+    else{
+      document.getElementById('winner').style.color = "brown";
+      document.getElementById('winner').innerText = firstPlace + " won this round!";
+    }
+  }
   });
   socket.on('fourth', function(fourth) {
     document.getElementById('fourth').innerText = "4th - " + fourth;
     if(fourth != "" && fourth != nick){
     rightotherAudio.play();
     }
-    if(firstPlace && fourth != ''){
+    if(firstPlace && playersnumber >= 5){
     if(firstPlace == nick){
       document.getElementById('winner').style.color = "#007e34";
       document.getElementById('winner').innerText = "You won this round!";
