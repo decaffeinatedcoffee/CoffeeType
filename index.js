@@ -1,5 +1,7 @@
 var express = require('express'); 
 var app = express();
+var Gen = require('sentence-generator')
+const gen = Gen('data.txt')
 var cors = require('cors');
 app.use(express.json());
 app.use(cors()); 
@@ -21,7 +23,6 @@ var fisrtLog = '';
 var secondLog = '';
 var thirdLog = '' ;
 var fourthLog = '' ;
-
 
 app.get('/', function(req, res){   
     res.sendFile(__dirname + '/public/index.html');     
@@ -139,7 +140,7 @@ io.on('connection', (socket) => {
     io.sockets.emit('third','');
     io.sockets.emit('fourth', '');   
     rightanswers = 0;  
-randomword = randomWords();
+randomword = gen.run();
 io.sockets.emit('newword', randomword);
 io.sockets.emit('round', currentRound);
 if(sessionusers >= 2){
