@@ -140,7 +140,7 @@ io.on('connection', (socket) => {
     io.sockets.emit('third','');
     io.sockets.emit('fourth', '');   
     rightanswers = 0;  
-randomword = gen.run();
+randomword = gen.run().toLowerCase();
 io.sockets.emit('newword', randomword);
 io.sockets.emit('round', currentRound);
 if(sessionusers >= 2){
