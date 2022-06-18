@@ -1,6 +1,6 @@
 var express = require('express'); 
 var app = express();
-var Gen = require('sentence-generator')
+var = require('sentence-generator')
 const gen = Gen('data.txt')
 var cors = require('cors');
 app.use(express.json());
@@ -140,7 +140,7 @@ io.on('connection', (socket) => {
     io.sockets.emit('third','');
     io.sockets.emit('fourth', '');   
     rightanswers = 0;  
-randomword = gen.run().toLowerCase();
+randomword = randomWords().toLowerCase();
 io.sockets.emit('newword', randomword);
 io.sockets.emit('round', currentRound);
 if(sessionusers >= 2){
