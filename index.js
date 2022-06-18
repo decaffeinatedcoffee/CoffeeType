@@ -1,6 +1,6 @@
 var express = require('express'); 
 var app = express();
-var = require('sentence-generator')
+var Gen = require('sentence-generator')
 const gen = Gen('data.txt')
 var cors = require('cors');
 app.use(express.json());
