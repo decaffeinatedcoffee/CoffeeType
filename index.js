@@ -16,7 +16,7 @@ const io = require('socket.io')(server, {
   });
 
 var sessionusers = 0;
-var randomword = "pizza oven";
+var randomword = "";
 var currentRound = 0;
 var rightanswers = 0;
 var fisrtLog = '';
