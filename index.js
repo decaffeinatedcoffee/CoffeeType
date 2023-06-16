@@ -41,6 +41,10 @@ app.get('/audios/shuffle', function(req, res){
     res.sendFile(__dirname + '/public/shuffle.mp3');     
 });
 
+app.get('/ads.txt', function(req, res){   
+    res.sendFile(__dirname + '/public/ads.txt');     
+});
+
 app.get('/audios/appstart', function(req, res){   
     res.sendFile(__dirname + '/public/start.mp3');     
 });
